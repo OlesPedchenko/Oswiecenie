@@ -11,9 +11,8 @@
         }
     </style>
 </head>
-<body>
-    <div><p>Strona się opracowuje</p></div>
-    <div id="g"></div>
+<body style="background: #e4ce77;">
+    <div id="g"  style="text-align: center;"></div>
 <script type="text/javascript">
     //numer wybranej żarówki i licznik
     var wybor = 0;
@@ -30,25 +29,25 @@
              }
         //ładujemy potrzebne obrazki
         preload (){ 
-            this.load.image('sky', 'sky.png');
-            this.load.spritesheet('zarowka', 'zg.png', { frameWidth: 60, frameHeight: 90 });
+            this.load.image('tloG', 'tloG.png');
+            this.load.spritesheet('zarowka', 'zarowka.png', { frameWidth: 120, frameHeight: 153 });
         }
         //budujemy grę: dodajemy tło, żarówki, licznik...
         create(){
             //tło
-            this.add.image(400, 300, 'sky');
+            this.add.image(710, 394, 'tloG');
             //żarówki
-            this.zarowka1 = this.add.sprite(200, 150, 'zarowka').setInteractive();
-            this.zarowka2 = this.add.sprite(350, 150, 'zarowka').setInteractive();
-            this.zarowka3 = this.add.sprite(500, 150, 'zarowka').setInteractive();
-            this.zarowka4 = this.add.sprite(200, 300, 'zarowka').setInteractive();
-            this.zarowka5 = this.add.sprite(350, 300, 'zarowka').setInteractive();
-            this.zarowka6 = this.add.sprite(500, 300, 'zarowka').setInteractive();
-            this.zarowka7 = this.add.sprite(200, 450, 'zarowka').setInteractive();
-            this.zarowka8 = this.add.sprite(350, 450, 'zarowka').setInteractive();
-            this.zarowka9 = this.add.sprite(500, 450, 'zarowka').setInteractive();
+            this.zarowka1 = this.add.sprite(475, 175, 'zarowka').setInteractive();
+            this.zarowka2 = this.add.sprite(715, 175, 'zarowka').setInteractive();
+            this.zarowka3 = this.add.sprite(950, 175, 'zarowka').setInteractive();
+            this.zarowka4 = this.add.sprite(475, 400, 'zarowka').setInteractive();
+            this.zarowka5 = this.add.sprite(715, 400, 'zarowka').setInteractive();
+            this.zarowka6 = this.add.sprite(950, 400, 'zarowka').setInteractive();
+            this.zarowka7 = this.add.sprite(475, 620, 'zarowka').setInteractive();
+            this.zarowka8 = this.add.sprite(715, 620, 'zarowka').setInteractive();
+            this.zarowka9 = this.add.sprite(950, 620, 'zarowka').setInteractive();
             //level
-            this.levelText = this.add.text(16, 16, 'Level: 1', { fontSize: '32px', fill: '#000' });
+            this.levelText = this.add.text(220, 35, '1', { font: '60px CustomFont'});
             //funkcja podświetlania kiedy klikamy
             this.anims.create({
                 key: "lightF",
@@ -135,7 +134,7 @@
         if(wybor == wybora[i]){
             if(i==level-1){
                 level++;
-                this.levelText.setText('Level: ' + level);
+                this.levelText.setText(level);
                 i = 0;
                 wybor = 0;
                 nextLevel = 1;
@@ -146,7 +145,7 @@
             }            
         }
         else if(wybor == 0){
-            this.levelText.setText('Level: ' + level);
+            this.levelText.setText(level);
         }
         else{
             wybor = 0;
@@ -163,21 +162,26 @@ class BootScene extends Phaser.Scene {
         super({ key: "BootScene" });
          }
     preload(){
-        this.load.image('tlo', 'tlo.jpg');
+        this.load.image('tlo', 'tloB.png');
         this.load.image('graj', 'graj.png');
     }
     create ()
     {
-        this.add.image(400, 300, 'tlo');
-        this.graj = this.add.sprite(400, 400, 'graj')
-        //this.koniec = this.add.image(400, 400, 'graj')
-        .setInteractive()
-        //.on('pointerover', () => this.graj.setStyle({ fill: '#f39c12' }))
-        //.on('pointerout', () => this.graj.setStyle({ fill: '#FFF' }));
+        this.add.image(710, 394, 'tlo');
+        
+        this.graj = this.add.sprite(750, 550, 'graj')
+        .setInteractive();
+        this.graj.on('pointermove', function () {
+            this.setTint(0xffff00);
+        });
+        this.graj.on('pointerout', function () {
+            this.clearTint();
+        });
         this.graj.on('pointerdown', function () {
             game.scene.start("Memory");
             game.scene.stop("BootScene");
         }, game);
+        
     }
 
 }
@@ -186,12 +190,23 @@ class EndScene extends Phaser.Scene {
     constructor(){
         super({ key: "EndScene" });
          }
+    preload(){
+        this.load.image('tloE', 'tloE.png');
+        this.load.image('odNowa', 'odNowa.png');
+    }
     create ()
     {
-        this.add.text(400, 100, 'Gra skończona');
-        this.add.text(400, 250, 'Wynik: level '+level);
-        this.koniec = this.add.text(400, 400, 'Graj od nowa')
-        .setInteractive()
+        this.add.image(710, 394, 'tloE');
+        this.add.text(760, 295, level,{ font: '70px CustomFont'});
+
+        this.koniec = this.add.sprite(705, 550, 'odNowa')
+        .setInteractive();
+        this.koniec.on('pointermove', function () {
+            this.setTint(0xffff00);
+        });
+        this.koniec.on('pointerout', function () {
+            this.clearTint();
+        });
         this.koniec.on('pointerdown', function () {
             level = 1;
             game.scene.start("BootScene");
@@ -203,9 +218,9 @@ class EndScene extends Phaser.Scene {
 //konfiguracja gry: rozmiar i funkcje
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
-    parent: 'g',
+    width: 1920,
+    height: 1080,
+    backgroundColor: '#e4ce77',
     scene: [ BootScene, Memory, EndScene ]
 };
 //tworzenie gry
